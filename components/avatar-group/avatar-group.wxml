@@ -1,0 +1,12 @@
+<view class="avatar-group">
+  <view 
+    wx:for="{{displayAvatars}}" 
+    wx:key="userId"
+    class="avatar {{size}}"
+    style="background-image: url({{item.avatarUrl || 'https://thirdwx.qlogo.cn/g?b=oidb&k=lOD7xZC1lAqT4p2rU9FjiaQ&t=132'}})"
+  >
+  </view>
+  <view wx:if="{{avatars.length > displayAvatars.length}}" class="avatar-count {{size}}">
+    +{{avatars.length - displayAvatars.length}}
+  </view>
+</view>

@@ -1,0 +1,45 @@
+<view class="container">
+  <view class="header">
+    <text>管理日历</text>
+  </view>
+
+  <view class="calendars-section">
+    <view class="section-title">我的日历</view>
+    
+    <view 
+      wx:for="{{calendars}}" 
+      wx:key="calendarId"
+      class="calendar-item"
+      bindtap="onCalendarTap"
+      data-calendar-id="{{item.calendarId}}"
+    >
+      <view class="calendar-info">
+        <text class="calendar-name">{{item.name}}</text>
+        <text class="calendar-color" style="background-color: {{item.color}}"></text>
+      </view>
+      
+      <view class="calendar-stats">
+        <text>事件数：{{item.eventCount || 0}}</text>
+      </view>
+    </view>
+
+    <view class="add-calendar-button">
+      <button bindtap="onAddCalendar">添加日历</button>
+    </view>
+  </view>
+
+  <view class="events-section">
+    <view class="section-title">最近事件</view>
+    
+    <view 
+      wx:for="{{events.slice(0, 5)}}" 
+      wx:key="eventId"
+      class="event-item"
+      bindtap="onEventTap"
+      data-event-id="{{item.eventId}}"
+    >
+      <view class="event-title">{{item.title}}</view>
+      <view class="event-time">{{item.startTime}}</view>
+    </view>
+  </view>
+</view>

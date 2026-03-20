@@ -1,0 +1,13 @@
+<view class="event-item card">
+  <view class="card-header flex justify-between items-center">
+    <text class="text-base font-bold text-gray-800">{{event.title}}</text>
+    <view class="flex items-center gap-2">
+      <view class="color-dot" style="background-color: {{event.color}}; width: 8rpx; height: 8rpx; border-radius: 50%;"></view>
+      <text class="text-sm text-gray-500">{{displayTime}}</text>
+    </view>
+  </view>
+  <view class="card-body">
+    <text class="text-sm text-gray-600" wx:if="{{event.description}}">{{event.description}}</text>
+    <text class="text-sm text-gray-500" wx:if="{{event.location}}">📍 {{event.location}}</text>
+  </view>
+</view>

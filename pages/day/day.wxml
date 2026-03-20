@@ -1,0 +1,27 @@
+<view class="container">
+  <view class="header">
+    <text>{{date}}</text>
+    <text>{{calendarName}}</text>
+  </view>
+
+  <view class="events-list">
+    <view 
+      wx:for="{{events}}" 
+      wx:key="eventId"
+      class="event-item"
+      bindtap="onEventTap"
+      data-event-id="{{item.eventId}}"
+    >
+      <view class="event-time">
+        <text>{{item.startTime}}</text>
+        <text wx:if="{{!item.isAllDay}}"> - {{item.endTime}}</text>
+      </view>
+      <view class="event-title">{{item.title}}</view>
+      <view class="event-location" wx:if="{{item.location}}">{{item.location}}</view>
+    </view>
+  </view>
+
+  <view class="add-event-button">
+    <button bindtap="onAddEvent">添加事件</button>
+  </view>
+</view>

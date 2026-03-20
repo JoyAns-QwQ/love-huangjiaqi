@@ -1,0 +1,41 @@
+.avatar-group {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid white;
+  margin-right: -10px;
+}
+
+.avatar.small {
+  width: 24px;
+  height: 24px;
+  margin-right: -8px;
+}
+
+.avatar-count {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #eee;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border: 2px solid white;
+  margin-right: -10px;
+}
+
+.avatar-count.small {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+  margin-right: -8px;
+}

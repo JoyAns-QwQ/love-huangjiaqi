@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业级日程管理演示 (动态交互版)</title>
+    
+    <!-- 引入 Tailwind CSS 用于快速响应式布局 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 引入 FullCalendar 核心与视图库 -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
+    <style>
+        body { background-color: #f5f6f7; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .fc-theme-standard td, .fc-theme-standard th { border-color: #ebebeb; }
+        .fc-col-header-cell-cushion { color: #333; font-weight: normal; padding: 8px 0 !important; }
+        .fc-daygrid-day-number { color: #333; font-size: 14px; padding: 4px 8px !important; }
+        .fc-day-today { background-color: #f2f8ff !important; }
+        .fc-day-sun .fc-daygrid-day-number, .fc-day-sat .fc-daygrid-day-number { color: #999; }
+        
+        /* 覆盖 FullCalendar 默认事件样式，使其像企微一样平滑扁平 */
+        .fc-event { border-radius: 2px !important; padding: 2px 4px !important; font-size: 12px !important; border: none !important; margin-bottom: 2px !important; }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+    </style>
+</head>
+<body class="p-2 md:p-6 text-sm text-gray-800">
+
+    <!-- 顶部操作栏 -->
+    <div class="bg-white p-4 flex flex-wrap justify-between items-center border-b border-gray-200 rounded-t-lg shadow-sm gap-2">
+        <div class="flex gap-2">
+            <button onclick="openModal()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm flex items-center shadow-sm">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> 新建日程
+            </button>
+        </div>
+        
+        <!-- 自动渲染的年月标题 -->
+        <h2 id="calendar-title" class="text-xl font-bold text-gray-800 mx-auto hidden md:block"></h2>
+
+        <div class="flex border border-gray-300 rounded overflow-hidden">
+            <button class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 border-r border-gray-300" onclick="calendar.today()">今天</button>
+            <button class="px-3 py-1.5 hover:bg-gray-50 border-r border-gray-300" onclick="calendar.changeView('timeGridDay')">日</button>
+            <button class="px-3 py-1.5 hover:bg-gray-50 border-r border-gray-300" onclick="calendar.changeView('timeGridWeek')">周</button>
+            <button class="px-3 py-1.5 bg-blue-50 text-blue-600 font-medium" onclick="calendar.changeView('dayGridMonth')">月</button>
+        </div>
+    </div>
+
+    <!-- 日历主容器 -->
+    <div class="bg-white p-4 rounded-b-lg shadow-sm mb-10">
+        <div id="calendar"></div>
+    </div>
+
+    <!-- 新建日程 动态交互表单 -->
+    <div id="eventModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-2 md:p-0">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl overflow-hidden">
+            
+            <div class="p-6 overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <input type="text" id="eventTitle" placeholder="输入日程、活动主题..." class="text-xl font-bold border-b border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:outline-none w-full pb-1" value="测试跨天日程">
+                </div>
+
+                <div class="space-y-4">
+                    <!-- 时间设置 (动态绑定) -->
+                    <div class="flex flex-col md:flex-row md:items-center gap-2">
+                        <div class="w-20 text-gray-500 text-sm font-medium">开始日期</div>
+                        <input type="date" id="startDate" class="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row md:items-center gap-2">
+                        <div class="w-20 text-gray-500 text-sm font-medium">结束日期</div>
+                        <input type="date" id="endDate" class="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+                    </div>
+
+                    <!-- 颜色/日历选择 -->
+                    <div class="flex items-center gap-2">
+                        <div class="w-20 text-gray-500 text-sm font-medium">色块演示</div>
+                        <select id="eventColor" class="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+                            <option value="#dcedc8|#558b2f">🟢 企微浅绿</option>
+                            <option value="#bfdbfe|#1d4ed8">🔵 商务浅蓝</option>
+                            <option value="#fef08a|#854d0e">🟡 警告浅黄</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center">
+                        <div class="w-20 text-gray-500 text-sm font-medium">参与人</div>
+                        <div class="flex-1 relative">
+                            <input type="text" placeholder="添加联系人 (选填)" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-4 border-t border-gray-100 text-right">
+                    <button onclick="closeModal()" class="px-4 py-2 border border-gray-300 rounded text-sm mr-2 hover:bg-gray-50">取消</button>
+                    <!-- 点击保存触发动态渲染 -->
+                    <button onclick="saveEvent()" class="px-6 py-2 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 shadow-sm">保存日程</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let calendar;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let calendarEl = document.getElementById('calendar');
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'zh-cn',
+                height: 'auto',
+                headerToolbar: false, 
+                
+                // 初始数据为空，不写死任何日程！
+                events: [],
+                
+                datesSet: function(info) {
+                    document.getElementById('calendar-title').innerText = info.view.title;
+                },
+                
+                // 点击日历上的某一天，自动把那天填入表单并弹窗
+                dateClick: function(info) {
+                    document.getElementById('startDate').value = info.dateStr;
+                    document.getElementById('endDate').value = info.dateStr; // 默认当天结束
+                    openModal();
+                }
+            });
+
+            calendar.render();
+        });
+
+        function openModal() {
+            // 如果表单里没有值，默认填上今天
+            if(!document.getElementById('startDate').value) {
+                let today = new Date().toISOString().split('T')[0];
+                document.getElementById('startDate').value = today;
+                document.getElementById('endDate').value = today;
+            }
+            document.getElementById('eventModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('eventModal').classList.add('hidden');
+        }
+
+        // 核心交互：获取表单数据，动态渲染到日历上
+        function saveEvent() {
+            const title = document.getElementById('eventTitle').value || '无标题日程';
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            const colorOption = document.getElementById('eventColor').value;
+            
+            // 拆分颜色值 (背景色|文字色)
+            const [bgColor, textColor] = colorOption.split('|');
+
+            if (!start || !end) {
+                alert("大哥，开始和结束日期不能为空啊！");
+                return;
+            }
+
+            if (start > end) {
+                alert("结束日期不能早于开始日期！");
+                return;
+            }
+
+            // 【关键逻辑】：FullCalendar 的结束时间是“排它”的。
+            // 比如你想让色块包含 10 号，传给 API 的结束时间必须是 11 号。
+            let endDateObj = new Date(end);
+            endDateObj.setDate(endDateObj.getDate() + 1);
+            let exclusiveEnd = endDateObj.toISOString().split('T')[0];
+
+            // 动态向日历中插入日程色块！
+            calendar.addEvent({
+                title: title,
+                start: start,
+                end: exclusiveEnd,
+                backgroundColor: bgColor,
+                textColor: textColor,
+                allDay: true // 设置为全天事件，就会出现横向的色块条
+            });
+
+            // 清理并关闭
+            document.getElementById('eventTitle').value = '';
+            closeModal();
+        }
+    </script>
+</body>
+</html>

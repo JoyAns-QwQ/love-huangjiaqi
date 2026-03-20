@@ -1,0 +1,112 @@
+<view class="container">
+  <!-- 顶部标题栏 -->
+  <view class="card header">
+    <view class="card-header flex justify-between items-center">
+      <text class="text-lg font-bold">新建事件</text>
+      <button bindtap="onClose" class="btn btn-default">取消</button>
+    </view>
+  </view>
+
+  <!-- 表单容器 -->
+  <view class="card mt-4">
+    <view class="card-body">
+      <form bindsubmit="onSubmit">
+        <!-- 事件标题 -->
+        <view class="form-group">
+          <text class="label">事件标题</text>
+          <input
+            type="text"
+            name="title"
+            placeholder="请输入事件标题"
+            class="input w-full"
+            value="{{title}}"
+            required
+          />
+        </view>
+
+        <!-- 事件描述 -->
+        <view class="form-group">
+          <text class="label">事件描述</text>
+          <textarea
+            name="description"
+            placeholder="请输入事件描述"
+            class="input w-full"
+            value="{{description}}"
+            maxlength="500"
+            style="height: 120rpx;"
+          />
+        </view>
+
+        <!-- 日期时间选择 -->
+        <view class="form-group">
+          <text class="label">开始时间</text>
+          <view class="flex gap-2">
+            <picker mode="date" name="startDate" value="{{startDate}}" start="2020-01-01" end="2030-12-31" bindchange="onStartDateChange">
+              <view class="picker flex-1">
+                {{startDate || '选择日期'}}
+              </view>
+            </picker>
+            <picker mode="time" name="startTime" value="{{startTime}}" bindchange="onStartTimeChange">
+              <view class="picker flex-1">
+                {{startTime || '选择时间'}}
+              </view>
+            </picker>
+          </view>
+        </view>
+
+        <!-- 结束时间 -->
+        <view class="form-group">
+          <text class="label">结束时间</text>
+          <view class="flex gap-2">
+            <picker mode="date" name="endDate" value="{{endDate}}" start="2020-01-01" end="2030-12-31" bindchange="onEndDateChange">
+              <view class="picker flex-1">
+                {{endDate || '选择日期'}}
+              </view>
+            </picker>
+            <picker mode="time" name="endTime" value="{{endTime}}" bindchange="onEndTimeChange">
+              <view class="picker flex-1">
+                {{endTime || '选择时间'}}
+              </view>
+            </picker>
+          </view>
+        </view>
+
+        <!-- 全天事件开关 -->
+        <view class="form-group">
+          <view class="flex justify-between items-center">
+            <text class="label">全天事件</text>
+            <switch name="isAllDay" checked="{{isAllDay}}" bindchange="onAllDayChange" />
+          </view>
+        </view>
+
+        <!-- 地点（仅非全天事件显示） -->
+        <view class="form-group" wx:if="{{!isAllDay}}">
+          <text class="label">地点</text>
+          <input
+            type="text"
+            name="location"
+            placeholder="请输入地点"
+            class="input w-full"
+            value="{{location}}"
+          />
+        </view>
+
+        <!-- 颜色选择 -->
+        <view class="form-group">
+          <text class="label">颜色</text>
+          <picker mode="selector" name="color" range="{{colorOptions}}" bindchange="onColorChange">
+            <view class="picker flex items-center gap-2">
+              <view class="color-preview" style="background-color: {{color}}; width: 30rpx; height: 30rpx; border-radius: 4rpx;"></view>
+              <text>{{colorLabels[colorIndex]}}</text>
+            </view>
+          </picker>
+        </view>
+
+        <!-- 提交按钮 -->
+        <view class="form-group mt-6">
+          <button class="btn btn-primary w-full" form-type="submit">保存事件</button>
+        </view>
+      </form>
+    </view>
+  </view>
+</view>

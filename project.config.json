@@ -1,0 +1,52 @@
+{
+  "description": "日历系统小程序",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataCheck": false,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": false,
+    "lazyloadPlaceholderEnable": false,
+    "useMultiFrameRuntime": true,
+    "useApiHook": true,
+    "useApiHostProcess": true,
+    "showES6CompileOption": false,
+    "es6Modules": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "2.30.2",
+  "appid": "wxcd3e301b4a7a0547",
+  "projectname": "MyCalendarMiniProgram",
+  "srcMiniProgram": "./",
+  "miniprogramRoot": "./",
+  "qrcodeFormat": "png",
+  "qrcodeWidth": 300,
+  "qrcodeDarkColor": "#000000",
+  "qrcodeLightColor": "#FFFFFF",
+  "simulatorType": "wechat",
+  "simulatorPluginLibVersion": {},
+  "simulatorPagePath": "pages/index/index",
+  "simulatorLaunchMode": "default",
+  "simulatorFontSize": 16,
+  "simulatorLanguage": "zh_CN",
+  "simulatorColor": "#000000",
+  "simulatorAddress": "localhost",
+  "simulatorPort": 3001,
+  "simulatorApiBase": "http://localhost:3001",
+  "condition": {
+    "search": {
+      "current": {},
+      "list": []
+    }
+  },
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
+}

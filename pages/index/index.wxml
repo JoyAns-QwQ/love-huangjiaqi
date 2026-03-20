@@ -1,0 +1,52 @@
+<view class="container">
+  <!-- 顶部操作栏 -->
+  <view class="card header">
+    <view class="card-header flex justify-between items-center">
+      <view class="month-nav flex items-center gap-4">
+        <button bindtap="onPrevMonth" class="btn btn-default">‹</button>
+        <text class="text-lg font-bold">{{currentYear}}年{{currentMonth + 1}}月</text>
+        <button bindtap="onNextMonth" class="btn btn-default">›</button>
+      </view>
+
+      <view class="flex gap-2">
+        <button bindtap="onToday" class="btn btn-default text-sm">今天</button>
+        <button bindtap="onMonthView" class="btn btn-default text-sm">月</button>
+        <button bindtap="onWeekView" class="btn btn-default text-sm">周</button>
+        <button bindtap="onDayView" class="btn btn-default text-sm">日</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 日历主容器 -->
+  <view class="card calendar mt-4">
+    <view class="card-body">
+      <!-- 星期标题 -->
+      <view class="calendar-grid weekdays">
+        <view wx:for="{{['日', '一', '二', '三', '四', '五', '六']}}" wx:key="index" class="text-center py-2 font-bold text-gray-600">
+          {{item}}
+        </view>
+      </view>
+
+      <!-- 日期网格 -->
+      <view class="calendar-grid days mt-2">
+        <view
+          wx:for="{{days}}"
+          wx:key="day"
+          class="calendar-day {{day.isCurrentMonth ? '' : 'other-month'}} {{day.isToday ? 'today' : ''}}"
+          bindtap="onDayTap"
+          data-year="{{day.year}}"
+          data-month="{{day.month}}"
+          data-day="{{day.day}}"
+        >
+          <text class="text-sm">{{day.day}}</text>
+          <view wx:if="{{day.hasEvent}}" class="event-dot"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="footer mt-4">
+    <button class="btn btn-primary w-full" bindtap="onManageTap">管理日历</button>
+  </view>
+</view>

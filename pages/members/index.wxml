@@ -1,0 +1,33 @@
+<view class="container">
+  <view class="calendar-info">
+    <text class="calendar-name">{{calendarName}}</text>
+  </view>
+
+  <view class="member-list">
+    <view 
+      wx:for="{{members}}" 
+      wx:key="userId"
+      class="member-item"
+    >
+      <view class="member-info">
+        <image class="member-avatar" src="{{item.avatarUrl || 'https://thirdwx.qlogo.cn/g?b=oidb&k=lOD7xZC1lAqT4p2rU9FjiaQ&t=132'}}"></image>
+        <view class="member-details">
+          <text class="member-name">{{item.nickname}}</text>
+          <text class="member-permission">权限：{{item.permission === 'view' ? '查看' : '编辑'}}</text>
+        </view>
+      </view>
+      <button 
+        class="remove-button" 
+        wx:if="{{item.userId !== getUserId()}}"
+        bindtap="onRemoveMember"
+        data-user-id="{{item.userId}}"
+      >
+        移除
+      </button>
+    </view>
+  </view>
+
+  <view class="calendar-actions">
+    <button class="back-button" bindtap="onBack">返回</button>
+  </view>
+</view>

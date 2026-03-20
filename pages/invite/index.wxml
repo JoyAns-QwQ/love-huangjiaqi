@@ -1,0 +1,43 @@
+<view class="container">
+  <view class="calendar-list">
+    <view 
+      wx:for="{{calendars}}" 
+      wx:key="calendarId"
+      class="calendar-item {{selectedCalendar === item.calendarId ? 'selected' : ''}}"
+      bindtap="onCalendarSelect"
+      data-calendar-id="{{item.calendarId}}"
+    >
+      <text class="calendar-name">{{item.name}}</text>
+      <text class="calendar-color" style="background-color: {{item.color}}"></text>
+    </view>
+  </view>
+
+  <view class="invite-code" wx:if="{{inviteCode}}">
+    <text>邀请码：{{inviteCode}}</text>
+  </view>
+
+  <view class="scan-button">
+    <button bindtap="onScan">扫描二维码</button>
+  </view>
+
+  <view class="generate-button">
+    <button bindtap="generateInviteCode">生成邀请码</button>
+  </view>
+
+  <view class="accept-button" wx:if="{{inviteCode}}">
+    <button bindtap="onAccept">接受邀请</button>
+  </view>
+
+  <view class="scan-modal" wx:if="{{scanning}}">
+    <view class="scan-content">
+      <view class="close-button" bindtap="onCloseScan">
+        <text>×</text>
+      </view>
+      <view class="scan-area">
+        <camera device-position="back" flash="auto" binderror="error" style="width: 100%; height: 300px;"></camera>
+      </view>
+      <input type="text" placeholder="或手动输入邀请码" bindinput="onInviteCodeInput" value="{{inviteCode}}" />
+      <button bindtap="onAccept">确认加入</button>
+    </view>
+  </view>
+</view>

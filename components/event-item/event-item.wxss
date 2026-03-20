@@ -1,0 +1,10 @@
+/* 事件卡片样式 */
+.event-item {
+  margin-bottom: 16rpx;
+}
+
+.color-dot {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+}

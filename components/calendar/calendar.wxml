@@ -1,0 +1,33 @@
+<view class="calendar-container">
+  <!-- 顶部导航 -->
+  <view class="calendar-header card">
+    <view class="card-header flex justify-between items-center">
+      <button bindtap="onPrevMonth" class="btn btn-default">‹</button>
+      <text class="text-lg font-bold">{{currentYear}}年{{currentMonth + 1}}月</text>
+      <button bindtap="onNextMonth" class="btn btn-default">›</button>
+    </view>
+  </view>
+
+  <!-- 星期标题 -->
+  <view class="calendar-weekdays calendar-grid">
+    <view wx:for="{{['日', '一', '二', '三', '四', '五', '六']}}" wx:key="index" class="text-center py-2 font-bold text-gray-600">
+      {{item}}
+    </view>
+  </view>
+
+  <!-- 日期网格 -->
+  <view class="calendar-days calendar-grid mt-2">
+    <view
+      wx:for="{{days}}"
+      wx:key="day"
+      class="calendar-day {{day.isCurrentMonth ? '' : 'other-month'}} {{day.isToday ? 'today' : ''}}"
+      bindtap="onDayTap"
+      data-year="{{day.year}}"
+      data-month="{{day.month}}"
+      data-day="{{day.day}}"
+    >
+      <text class="text-sm">{{day.day}}</text>
+      <view wx:if="{{day.hasEvent}}" class="event-dot"></view>
+    </view>
+  </view>
+</view>
